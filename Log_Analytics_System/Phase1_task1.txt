@@ -1,0 +1,59 @@
+
+phase 1 :Hadoop Environment Setup
+
+Task1 : Cluster Initialization
+----------------------------------
+
+Step 1 : Change the directory
+	Command : cd /mnt/d
+
+Step 2 :  Setup Environment Variables
+	Command: source ~/.bashrc
+
+Step 3: Configure SSH
+	Command : sudo service ssh start
+
+Step 4: Start with HDFS 
+	Command : start-dfs.sh
+Output :
+Starting namenodes on [localhost]
+Starting datanodes
+Starting secondary namenodes 
+
+Step 5: Start Yarn Services
+	Command : start-yarn.sh
+Output : 
+Starting resourcemanager
+Starting nodemanagers
+
+Step 6 : Verify all Hadoop daemons
+	Command : jps
+Output:
+865 DataNode
+1034 SecondaryNameNode
+1595 Jps
+1454 NodeManager
+766 NameNode
+1343 ResourceManager
+
+Step 7 :Create a local sample file
+Command : echo -e "Hello Hapood\nHello Pallavi\nHadoop is powerful" > test.txt
+
+Step 8: Create Directory
+	Command : hdfs dfs -mkdir /input
+
+Step 9: Upload file to HDFS 
+	Command : hdfs dfs -put test.txt /input
+
+step 10:  View file content from HDFS
+	Command : hdfs df -cat /input/test.txt
+Output : 
+Hello Hapood
+Hello Pallavi
+Hadoop is powerful
+
+Step 11: Verify HDFS Web UI
+	Command : http://localhost:9870
+
+Step 12: Verify Yarn Web UI
+	Command : http://localhost:8088
