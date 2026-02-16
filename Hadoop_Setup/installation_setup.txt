@@ -1,0 +1,233 @@
+This document records the step-by-step installation and configuration of WSL, Ubuntu (22.04), Java 8 and Hadoop
+
+Step 1: Install WSL with Ubuntu
+* Install WSL:
+	Command(Run in Administrator) : C:\Users\palla> wsl --install
+	output : 
+	Installing: Ubuntu-22.04
+	Ubuntu-22.04 has been installed.
+	Launching Ubuntu-22.04..
+	The requested operation is successful.
+	Changes will not be effective until the system is rebooted.
+
+* Install Ubuntu from Microsoft Store 
+	Launch Ubuntu
+	->Create a UNIX user account for your Linux environment.
+	Output:
+	Installing, this may take a few minutes...
+	Please create a default UNIX user account.
+	Enter new UNIX username: *********
+	New password:*********
+	Retype new password:*******
+	Installation successful!
+
+------------------------------------
+Step 2:Update System & Install Java 8
+
+	Command:
+	sudo apt update && sudo apt upgrade -y
+	sudo apt install openjdk-8-jdk -y
+	java -version
+
+Output:
+openjdk version "1.8.0_482"
+OpenJDK Runtime Environment (build 1.8.0_482-8u482-ga~us1-0ubuntu1~24.04-b08)
+OpenJDK 64-Bit Server VM (build 25.482-b08, mixed mode)
+
+---------------------------------------
+Step 3: Download Hadoop
+	Command:
+	cd ~
+	wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+
+Output:
+--2026-02-13 11:24:00--  https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+Resolving downloads.apache.org (downloads.apache.org)... 135.181.214.104, 88.99.208.237, 2a01:4f9:3a:2c57::2, ...
+Connecting to downloads.apache.org (downloads.apache.org)|135.181.214.104|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 730107476 (696M) [application/x-gzip]
+Saving to: ‘hadoop-3.3.6.tar.gz’
+
+2026-02-13 11:29:51 (2.00 MB/s) - ‘hadoop-3.3.6.tar.gz’ saved [730107476/730107476]
+	
+	Command:
+	ls ~
+
+output:
+hadoop-3.3.6.tar.gz
+
+-------------------------------------
+Step 4: Move Hadoop to D Drive
+	Command:
+	mv ~/hadoop-3.3.6.tar.gz /mnt/d/
+	cd /mnt/d
+	tar -xvzf hadoop-3.3.6.tar.gz
+	mv hadoop-3.3.6 hadoop
+	sudo chown -R $USER:$USER /mnt/d/Hadoop
+
+--------------------------------------
+Step 5:Create Hadoop Data Directories
+	Command:
+	sudo rm -rf /mnt/d/hadoop/data
+	mkdir -p ~/hadoop-data/namenode
+	mkdir -p ~/hadoop-data/datanode
+	pwd
+Output:
+/mnt/d
+	Command:
+	ls
+Output:
+'System Volume Information'   hadoop   hadoop-3.3.6.tar.gz
+
+--------------------------------------
+Step 6: Configure Hadoop
+
+core-site.xml
+
+nano /mnt/d/hadoop/etc/hadoop/core-site.xml
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://localhost:9000</value>
+    </property>
+</configuration>
+
+hdfs-site.xml
+
+nano /mnt/d/hadoop/etc/hadoop/hdfs-site.xml
+<configuration>
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///usr/local/hadoop/hdfs/namenode</value>
+    </property>
+
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///usr/local/hadoop/hdfs/datanode</value>
+    </property>
+</configuration>
+
+---------------------------------------
+Step 8: Set Hadoop Environment Variables
+	Command:
+	nano ~/.bashrc
+
+	Add at the bottom:
+	export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+	export HADOOP_HOME=/mnt/d/hadoop
+	export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+source ~/.bashrc
+
+-----------------------------------------
+Step 9: Format NameNode
+	Purpose:
+	Creates metadata structures required by the NameNode such as:
+	Block Pool ID
+	Version files and storage directories for the NameNode
+
+	Command:	
+	hdfs namenode -format
+
+--------------------------------------------
+Step 10:Install & Configure SSH (Required for Hadoop)
+
+	Command:
+	sudo apt install -y openssh-server
+	sudo service ssh start
+	sudo service ssh status
+Output:
+● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)
+     Active: active (running) since Fri 2026-02-13 11:45:39 IST; 20s ago
+       Docs: man:sshd(8)
+             man:sshd_config(5)
+   Main PID: 8117 (sshd)
+      Tasks: 1 (limit: 4499)
+     Memory: 1.7M
+        CPU: 37ms
+     CGroup: /system.slice/ssh.service
+             └─8117 "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups"
+
+Feb 13 11:45:39 DESKTOP-P8GCKCP systemd[1]: Starting OpenBSD Secure Shell server...
+Feb 13 11:45:39 DESKTOP-P8GCKCP sshd[8117]: Server listening on 0.0.0.0 port 22.
+Feb 13 11:45:39 DESKTOP-P8GCKCP sshd[8117]: Server listening on :: port 22.
+Feb 13 11:45:39 DESKTOP-P8GCKCP systemd[1]: Started OpenBSD Secure Shell server.
+
+---------------------------------------------
+Step 11:Enable Passwordless SSH
+	
+	Command:
+	ssh-keygen -t rsa -P "" -f ~/.ssh/id_rsa
+	cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+	chmod 600 ~/.ssh/authorized_keys
+	ssh localhost
+	exit
+
+---------------------------------------------
+Step 12:Start HDFS and YARN
+
+	Commnad:
+	start-dfs.sh
+
+Output:
+Starting namenodes on [localhost]
+Starting datanodes
+Starting secondary namenodes
+	
+	Command:
+	start-yarn.sh
+Output:
+Starting resourcemanager
+Starting nodemanagers
+
+---------------------------------------
+Step 13: Verify Hadoop
+	Command:
+	jps
+Output:
+9794 NodeManager
+9060 NameNode
+9156 DataNode
+9957 Jps
+9319 SecondaryNameNode
+9673 ResourceManager
+
+--------------------------------------
+Step 14: Hadoop Web UI
+
+Open in Windows browser:
+http://localhost:9870
+
+YARN Web UI
+Open in Windows browser:
+http://localhost:8088
+
+
+Output:
+Configured Capacity : 123.45GB
+DFS Used : 0 GB
+Non DFS Used: 2 GB
+DFS Remaining: 121.45 GB
+Live Nodes : 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
