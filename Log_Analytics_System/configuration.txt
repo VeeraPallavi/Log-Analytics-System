@@ -1,0 +1,61 @@
+Hadoop Configuration and Performance Tuning
+
+Introduction:
+With the rapid growth of data hadoop cluster experienced slow performance.
+This phase focuses on analyzing Hadoop configuration files.
+Recommending tuning strategies to improve performance, scalability, and resource usage.
+
+Hadoop Configuration Files:
+core-site.xml - It handles where hdfs is stored, how fast files are read/written.
+hdfs-site.xml - It handles the block size , decides how the data is stored, split.	
+mapred-site.xml	- It handles the mapper and reducer memory, number of reducers, shuffle and sort behaviour.
+yarn-site.xml - It handles container allocation, multi-job execution
+
+HDFS Block Management:
+
+Key Properties:
+BlockSize:
+dfs.blocksize
+Default: 128 MB
+Recommendation: Increase to 256–512 MB for large log files.
+Impact: Reduces metadata load on NameNode, fewer blocks to manage, faster sequential reads.
+
+Replication :  Replication factor refers to number of copies of blocks created across different datanodes.
+dfs.replication
+Default: 3
+Recommendation: Adjust to 2–3 depending on storage vs. fault tolerance needs.
+Impact: Balances reliability with storage efficiency.
+
+MapReduce Execution Properties:
+MapReduce is a distributed processing model used to handle large-scale data in parallel by dividing tasks into mappers and reducers. 
+
+Mapper Memory Configuration: Defines the memory allocated to each mapper task.
+mapreduce.map.memory.mb = 2048 MB
+Impact:
+Low memory allocation can cause tasks to run slowly or fail.
+Increasing mapper memory allows handling of larger input splits efficiently.
+Reduces task failures and improves throughput for log-heavy workloads.
+
+Reducer Memory Configuration: Defines the memory allocated to each reducer task.
+mapreduce.reduce.memory.mb = 4069MB
+Impact:
+Reducers process large shuffled data from mappers.
+Higher memory allocation improves shuffle and aggregation performance.
+
+Number of Reducers:Determines the number of reducer tasks for a job.
+mapreduce.job.reduces = 4
+Impact:
+More reducers enable parallel processing and faster aggregation.
+Excessive reducers increase overhead and coordination cost.
+
+YARN Resource Allocation:
+YARN (Yet Another Resource Negotiator) manages CPU and memory resources across applications running in the Hadoop cluster.
+
+YARN NodeManager Memory Allocation:
+This property defines the memory available on a node for YARN containers.
+yarn.nodemanager.resource.memory-mb = 16384
+
+YARN NodeManager CPU Allocation:
+This property defines number of CPU cores available for container execution.
+yarn.nodemanager.resource.cpu-vcores = 8
+Reduces the CPU time.
