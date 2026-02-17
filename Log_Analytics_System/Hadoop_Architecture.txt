@@ -1,0 +1,45 @@
+Hadoop Architecture Evolution
+
+Hadoop 1.x Architecture
+
+Overview: 
+- Hadoop 1.X follows monolithic architecture.
+- Resource management and job scheduling is handled by single master component.
+
+Core Components:
+	- HDFS (storage)
+	- MapReduce (processing)
+
+JobTracker: Centralized master node responsible for resource management and job scheduling.
+TaskTracker: Worker nodes executing tasks assigned by JobTracker.
+
+Limitations:
+Single point of failure: If JobTracker failed, the entire cluster stopped.
+Scalability issues: JobTracker struggled to manage thousands of nodes.
+Rigid architecture: Coupled resource management and job scheduling, limiting flexibility.
+
+Hadoop 2.x Architecture
+
+Introduction to YARN : Separation of resource management from job scheduling via YARN (Yet Another Resource Negotiator).
+
+Components:
+- ResourceManager: Global authority managing cluster resources.
+- NodeManager: Manages resources on individual nodes.
+- ApplicationMaster: Manages execution of a single application.
+
+Advantages:
+Scalability: Can handle thousands of nodes more efficiently.
+Flexibility: Supports multiple processing frameworks (MapReduce, Spark, Tez, etc.) instead of only MapReduce.
+Improved fault tolerance: Decentralized management reduces risk of single-point failures.
+
+Hadoop 3.x Architecture
+
+Overview:
+Hadoop 3.X builds upon YARN and focuses on performance optimization, scalability, and fault tolerance.
+
+Key Improvements:
+High Availability: Multiple NameNodes supported, eliminating single points of failure in HDFS.
+Erasure Coding: More space-efficient fault tolerance compared to replication.
+Scalability: Supports clusters with thousands of nodes and petabytes of data.
+Containerization: Native support for Docker containers in YARN.
+Resource Scheduling Enhancements: Better utilization of cluster resources.
