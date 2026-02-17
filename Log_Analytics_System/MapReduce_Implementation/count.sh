@@ -4,7 +4,7 @@ echo " Python Hadoop Streaming Job "
 
 #Define variables
 STREAMING_JAR=/mnt/d/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar
-INPUT_PATH=/logs/source/large_logfile.log
+INPUT_PATH=/logs/source/real_large.log
 OUTPUT_PATH=/logs/py_output
 
 #Remove old output directory 
