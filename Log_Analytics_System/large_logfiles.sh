@@ -3,9 +3,9 @@
 #Task 3: Large Log File Scalability Test
 
 #VARIABLES
-LOCAL_FILE="/mnt/d/sources/large_logfile.log"
+LOCAL_FILE="/mnt/d/real_large.log"
 HDFS_DIR="/logs/source"
-HDFS_FILE="$HDFS_DIR/large_logfile.log"
+HDFS_FILE="$HDFS_DIR/real_large.log"
 
 #CREATING HDFS DIRECTORY
 echo "Creating HDFS directory $HDFS_DIR..."
@@ -23,6 +23,6 @@ hdfs dfs -ls $HDFS_DIR
 hdfs fsck $HDFS_FILE -files -blocks
 
 #Analyze block allocation for large files
-echo "File Size : 822MB"
+echo "File Size : 1.23GB"
 echo "HDFS block size : 128 MB"
-echo "Expected blocks: 7 (6 full blocks of 128 MB + 1 partial block of ~42 MB)."
+echo "Expected blocks: 10Blocks"
