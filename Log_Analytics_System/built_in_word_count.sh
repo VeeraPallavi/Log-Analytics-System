@@ -10,7 +10,7 @@ hdfs dfs -rm -r /logs/output 2>/dev/null
 hadoop jar \
 /mnt/d/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar \
 wordcount \
-/logs/source/large_logfile.log \
+/logs/source/real_large.log \
 /logs/output
 
 #Verify output directory
