@@ -4,7 +4,7 @@
 #Task 2: Small Log File Storage
 
 #VARIABLES
-LOCAL_FILE="/mnt/d/sources/logfiles.log" 
+LOCAL_FILE="/mnt/d/logfiles.log" 
 HDFS_DIR="/logs/source" 
 HDFS_FILE="$HDFS_DIR/logfiles.log"
 
